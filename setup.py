@@ -4,7 +4,7 @@ setup(
     name='pdrill',
     version='0.1',
     license='Apache License 2.0',
-    package=find_packages(),
+    packages=find_packages(),
     author='Kirill Kouzoubov',
     author_email='kirill.kouzoubov@ga.gov.au',
     description='Parallel Pixel Drill from S3 bucket, prototype/investigation',
