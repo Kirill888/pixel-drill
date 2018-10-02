@@ -43,15 +43,16 @@ class ParallelReader(object):
                              region_name=None,
                              timer=None):
         session = _session(region_name)
+        open_args = dict(sharing=False)
 
         if timer is not None:
             def proc(url, userdata):
                 t0 = timer()
-                with rasterio.open(url, 'r') as f:
+                with rasterio.open(url, 'r', **open_args) as f:
                     on_file_cbk(f, userdata, t0=t0)
         else:
             def proc(url, userdata):
-                with rasterio.open(url, 'r') as f:
+                with rasterio.open(url, 'r', **open_args) as f:
                     on_file_cbk(f, userdata)
 
         with rasterio.Env(session=session, **gdal_opts):
@@ -70,7 +71,7 @@ class ParallelReader(object):
 
         self._gdal_opts = dict(VSI_CACHE=True,
                                CPL_VSIL_CURL_ALLOWED_EXTENSIONS='tif',
-                               GDAL_DISABLE_READDIR_ON_OPEN=True)
+                               GDAL_DISABLE_READDIR_ON_OPEN='EMPTY_DIR')
 
     def warmup(self, action=None):
         """Mostly needed for benchmarking needs. Ensures that worker threads are
